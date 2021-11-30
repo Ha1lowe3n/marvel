@@ -1,12 +1,8 @@
 import decoration from "../../resources/img/vision.png";
-import { MarvelService } from "../../services/MarvelService";
 import { AppHeader } from "../AppHeader";
 import { CharInfo } from "../CharInfo";
 import { CharList } from "../CharList";
 import { RandomChar } from "../RandomChar";
-
-const marvelService = new MarvelService();
-console.log(marvelService.getAllCharacteres().then((res) => res.data.results));
 
 export const App: React.FC = () => {
     return (
