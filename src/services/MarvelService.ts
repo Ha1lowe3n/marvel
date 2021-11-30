@@ -1,3 +1,8 @@
+type UrlType = {
+    type: string;
+    url: string;
+};
+
 export class MarvelService {
     private _baseUrl = `https://gateway.marvel.com:443/v1/public`;
     private _apiKey = `apikey=69d88190cd71ff804d98f5a285ed6964`;
@@ -13,14 +18,31 @@ export class MarvelService {
     };
 
     public getAllCharacteres = async () => {
-        return await this.getResource(
+        const {
+            data: { results },
+        } = await this.getResource(
             `${this._baseUrl}/characters?${this._apiKey}`
         );
+        return results.map(this.transformCharacter);
     };
 
-    public getCharacteres = async (characterId: number) => {
-        return await this.getResource(
-            `${this._baseUrl}/characters/${characterId}/${this._apiKey}`
+    public getCharacterById = async (characterId: number) => {
+        const {
+            data: { results },
+        } = await this.getResource(
+            `${this._baseUrl}/characters/${characterId}?${this._apiKey}`
         );
+
+        return this.transformCharacter(results[0]);
+    };
+
+    private transformCharacter = (char: any) => {
+        return {
+            name: char.name,
+            description: char.description,
+            thumbnail: char.thumbnail.path + "." + char.thumbnail.extension,
+            homepage: char.urls.find((el: UrlType) => el.type === "detail"),
+            wiki: char.urls.find((el: UrlType) => el.type === "wiki"),
+        };
     };
 }
