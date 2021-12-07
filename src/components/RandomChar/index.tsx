@@ -6,12 +6,6 @@ import { MarvelService } from "../../services/MarvelService";
 import { Spinner } from "../../Spinner";
 import { ErrorGif } from "../ErrorGif";
 
-const charactersIds = [
-    1011334, 1017100, 1009144, 1010699, 1009146, 1016823, 1009148, 1009149,
-    1010903, 1011266, 1010354, 1010846, 1017851, 1012717, 1011297, 1011031,
-    1009150, 1011198, 1011175, 1011136,
-];
-
 type StateType = {
     char: {
         name: string | null;
@@ -33,7 +27,7 @@ export class RandomChar extends React.Component {
             homepage: null,
             wiki: null,
         },
-        loading: true,
+        loading: false,
         error: false,
     };
 
@@ -45,9 +39,11 @@ export class RandomChar extends React.Component {
 
     updateChar = async () => {
         try {
-            const id =
-                charactersIds[Math.floor(Math.random() * charactersIds.length)];
+            this.setState({ loading: true, error: false });
+
+            const id = await this.marvelService.getRandomCharacterId();
             const res = await this.marvelService.getCharacterById(id);
+
             this.setState({
                 char: {
                     ...res,
@@ -71,11 +67,15 @@ export class RandomChar extends React.Component {
     };
 
     render() {
+        console.log("render");
+
         const {
             char: { name, description, thumbnail, homepage, wiki },
             loading,
             error,
         } = this.state;
+
+        console.log(thumbnail);
 
         const errorOrLoad = loading ? <Spinner /> : error ? <ErrorGif /> : null;
 
@@ -84,9 +84,14 @@ export class RandomChar extends React.Component {
                 {errorOrLoad ?? (
                     <div className="randomchar__block">
                         <img
-                            src={thumbnail ? thumbnail : undefined}
+                            src={thumbnail!}
                             alt="Random character"
                             className="randomchar__img"
+                            style={
+                                thumbnail?.includes("image_not_available")
+                                    ? { objectFit: "contain" }
+                                    : undefined
+                            }
                         />
                         <div className="randomchar__info">
                             <p className="randomchar__name">{name}</p>
@@ -115,7 +120,10 @@ export class RandomChar extends React.Component {
                         Do you want to get to know him better?
                     </p>
                     <p className="randomchar__title">Or choose another one</p>
-                    <button className="button button__main">
+                    <button
+                        className="button button__main"
+                        onClick={() => this.updateChar()}
+                    >
                         <div className="inner">try it</div>
                     </button>
                     <img

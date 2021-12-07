@@ -36,8 +36,32 @@ export class MarvelService {
         return this.transformCharacter(results[0]);
     };
 
+    public getRandomCharacterId = async () => {
+        const {
+            data: { results },
+        } = await this.getResource(
+            `${this._baseUrl}/characters?limit=10&offset=10&${this._apiKey}`
+        );
+
+        const randomId = Math.floor(Math.random() * 10);
+        const id = results[randomId].id;
+
+        return id;
+    };
+
+    public getQuantityCharacters = async (quantity: number) => {
+        const {
+            data: { results },
+        } = await this.getResource(
+            `${this._baseUrl}/characters?limit=${quantity}&offset=${quantity}&${this._apiKey}`
+        );
+
+        return results.map((res: any) => this.transformCharacter(res));
+    };
+
     private transformCharacter = (char: any) => {
         return {
+            id: char.id,
             name: char.name,
             description: char.description,
             thumbnail: char.thumbnail.path + "." + char.thumbnail.extension,
