@@ -12,6 +12,9 @@ interface StateType {
     characters: CharType[];
     loading: boolean;
     error: boolean;
+    newItemsLoading: boolean;
+    offsetCharacters: number;
+    limitOffsetCharacters: number;
 }
 
 export class CharList extends Component<CharListProps> {
@@ -19,6 +22,9 @@ export class CharList extends Component<CharListProps> {
         characters: [],
         loading: false,
         error: false,
+        newItemsLoading: false,
+        offsetCharacters: 0,
+        limitOffsetCharacters: 1559,
     };
 
     marvelService = new MarvelService();
@@ -29,22 +35,67 @@ export class CharList extends Component<CharListProps> {
 
     loadingCharacters = async () => {
         try {
-            this.setState({ loading: true });
+            this.setState({ loading: true, newItemsLoading: true });
 
-            const characters = await this.marvelService.getQuantityCharacters(
-                9
+            const characters = await this.marvelService.getCharacters(
+                this.state.offsetCharacters
             );
-            console.log(characters);
 
-            this.setState({ characters, loading: false });
+            this.setState({
+                characters: characters,
+                loading: false,
+                newItemsLoading: false,
+            });
         } catch (err) {
-            this.setState({ loading: false, error: true });
+            this.setState({
+                loading: false,
+                error: true,
+                newItemsLoading: false,
+            });
+        }
+    };
+
+    onRequestNewCharacters = async () => {
+        try {
+            this.setState({ newItemsLoading: true, error: false });
+
+            const changeOffset =
+                this.state.offsetCharacters <= 1550
+                    ? 9
+                    : this.state.limitOffsetCharacters -
+                      this.state.offsetCharacters;
+
+            const newCharacters = await this.marvelService.getCharacters(
+                this.state.offsetCharacters + changeOffset
+            );
+
+            this.setState(({ characters, offsetCharacters }: StateType) => ({
+                characters: [...characters, ...newCharacters],
+                loading: false,
+                offsetCharacters: offsetCharacters + changeOffset,
+                newItemsLoading: false,
+            }));
+        } catch (err) {
+            this.setState({
+                loading: false,
+                error: true,
+                newItemsLoading: false,
+            });
         }
     };
 
     render() {
         const { onCharSelected } = this.props;
-        const { loading, error } = this.state;
+        const {
+            loading,
+            error,
+            newItemsLoading,
+            limitOffsetCharacters,
+            offsetCharacters,
+        } = this.state;
+
+        console.log(limitOffsetCharacters);
+        console.log(offsetCharacters);
 
         const errorOrLoad = loading ? <Spinner /> : error ? <ErrorGif /> : null;
 
@@ -78,9 +129,17 @@ export class CharList extends Component<CharListProps> {
                         ))}
                     </ul>
                 )}
-                <button className="button button__main button__long">
-                    <div className="inner">load more</div>
-                </button>
+                {offsetCharacters !== limitOffsetCharacters && (
+                    <button
+                        className="button button__main button__long"
+                        disabled={newItemsLoading}
+                        onClick={() => this.onRequestNewCharacters()}
+                    >
+                        <div className="inner">
+                            {newItemsLoading ? "Waiting..." : "Load more"}
+                        </div>
+                    </button>
+                )}
             </div>
         );
     }

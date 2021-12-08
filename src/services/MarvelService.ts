@@ -40,20 +40,18 @@ export class MarvelService {
         const {
             data: { results },
         } = await this.getResource(
-            `${this._baseUrl}/characters?limit=10&offset=10&${this._apiKey}`
+            `${this._baseUrl}/characters?limit=100&${this._apiKey}`
         );
 
-        const randomId = Math.floor(Math.random() * 10);
-        const id = results[randomId].id;
-
-        return id;
+        const randomId = Math.floor(Math.random() * results.length);
+        return results[randomId].id;
     };
 
-    public getQuantityCharacters = async (quantity: number) => {
+    public getCharacters = async (offset: number) => {
         const {
             data: { results },
         } = await this.getResource(
-            `${this._baseUrl}/characters?limit=${quantity}&offset=${quantity}&${this._apiKey}`
+            `${this._baseUrl}/characters?limit=9&offset=${offset}&${this._apiKey}`
         );
 
         return results.map((res: any) => this.transformCharacter(res));
