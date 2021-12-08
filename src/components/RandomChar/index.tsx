@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 
 import "./randomChar.scss";
 import mjolnir from "../../resources/img/mjolnir.png";
@@ -6,27 +6,28 @@ import { MarvelService } from "../../services/MarvelService";
 import { Spinner } from "../../Spinner";
 import { ErrorGif } from "../ErrorGif";
 
-type StateType = {
-    char: {
-        name: string | null;
-        description: string | null;
-        thumbnail: string | null;
-        homepage: string | null;
-        wiki: string | null;
-    };
-    loading: boolean;
-    error: boolean;
+export type CharType = {
+    id: number;
+    name: string;
+    description: string | null;
+    thumbnail: string;
+    homepage: string;
+    wiki: string;
+    comics: {
+        resourceURI: string;
+        name: string;
+    }[];
 };
 
-export class RandomChar extends React.Component {
+interface StateType {
+    char: CharType;
+    loading: boolean;
+    error: boolean;
+}
+
+export class RandomChar extends Component {
     state: StateType = {
-        char: {
-            name: null,
-            description: null,
-            thumbnail: null,
-            homepage: null,
-            wiki: null,
-        },
+        char: {} as CharType,
         loading: false,
         error: false,
     };
@@ -67,15 +68,11 @@ export class RandomChar extends React.Component {
     };
 
     render() {
-        console.log("render");
-
         const {
             char: { name, description, thumbnail, homepage, wiki },
             loading,
             error,
         } = this.state;
-
-        console.log(thumbnail);
 
         const errorOrLoad = loading ? <Spinner /> : error ? <ErrorGif /> : null;
 
@@ -98,14 +95,18 @@ export class RandomChar extends React.Component {
                             <p className="randomchar__descr">{description}</p>
                             <div className="randomchar__btns">
                                 <a
-                                    href={homepage ? homepage : undefined}
+                                    href={homepage}
                                     className="button button__main"
+                                    target="_blank"
+                                    rel="noreferrer"
                                 >
                                     <div className="inner">homepage</div>
                                 </a>
                                 <a
-                                    href={wiki ? wiki : undefined}
+                                    href={wiki}
                                     className="button button__secondary"
+                                    target="_blank"
+                                    rel="noreferrer"
                                 >
                                     <div className="inner">Wiki</div>
                                 </a>

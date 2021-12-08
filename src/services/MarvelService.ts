@@ -65,8 +65,10 @@ export class MarvelService {
             name: char.name,
             description: char.description,
             thumbnail: char.thumbnail.path + "." + char.thumbnail.extension,
-            homepage: char.urls.find((el: UrlType) => el.type === "detail"),
-            wiki: char.urls.find((el: UrlType) => el.type === "wiki"),
+            homepage: char.urls.find((el: UrlType) => el.type === "detail")
+                ?.url,
+            wiki: char.urls.find((el: UrlType) => el.type === "wiki")?.url,
+            comics: char.comics.items,
         };
     };
 }
