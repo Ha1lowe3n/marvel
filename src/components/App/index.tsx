@@ -25,7 +25,10 @@ export class App extends Component {
                 <main>
                     <RandomChar />
                     <div className="char__content">
-                        <CharList onCharSelected={this.onCharSelected} />
+                        <CharList
+                            onCharSelected={this.onCharSelected}
+                            charId={this.state.selectedChar}
+                        />
                         <CharInfo charId={this.state.selectedChar} />
                     </div>
                     <img

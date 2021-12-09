@@ -7,6 +7,7 @@ import { CharType } from "../RandomChar";
 
 interface CharListProps {
     onCharSelected: (id: number) => void;
+    charId: number | null;
 }
 interface StateType {
     characters: CharType[];
@@ -85,7 +86,7 @@ export class CharList extends Component<CharListProps> {
     };
 
     render() {
-        const { onCharSelected } = this.props;
+        const { onCharSelected, charId } = this.props;
         const {
             loading,
             error,
@@ -103,11 +104,17 @@ export class CharList extends Component<CharListProps> {
             <div className="char__list">
                 {errorOrLoad ?? (
                     <ul className="char__grid">
-                        {this.state.characters.map((char) => (
+                        {this.state.characters.map((char, i) => (
                             <li
                                 key={char.id}
-                                className="char__item"
+                                className={
+                                    "char__item" +
+                                    " " +
+                                    (char.id === charId &&
+                                        "char__item_selected")
+                                }
                                 onClick={() => onCharSelected(char.id)}
+                                tabIndex={i + 1}
                             >
                                 <img
                                     src={
