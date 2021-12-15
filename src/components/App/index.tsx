@@ -1,43 +1,31 @@
-import { Component } from "react";
+import { useCallback, useState } from "react";
 import decoration from "../../resources/img/vision.png";
 import { AppHeader } from "../AppHeader";
 import { CharInfo } from "../CharInfo";
 import { CharList } from "../CharList";
 import { RandomChar } from "../RandomChar";
 
-interface AppState {
-    selectedChar: number | null;
-}
+export const App: React.FC = () => {
+    const [selectedChar, setSelectedChar] = useState<number | null>(null);
 
-export class App extends Component {
-    state: AppState = {
-        selectedChar: null,
-    };
+    const onCharSelected = useCallback((id: number) => {
+        setSelectedChar(id);
+    }, []);
 
-    onCharSelected = (id: number) => {
-        this.setState({ selectedChar: id });
-    };
-
-    render() {
-        return (
-            <div className="app">
-                <AppHeader />
-                <main>
-                    <RandomChar />
-                    <div className="char__content">
-                        <CharList
-                            onCharSelected={this.onCharSelected}
-                            charId={this.state.selectedChar}
-                        />
-                        <CharInfo charId={this.state.selectedChar} />
-                    </div>
-                    <img
-                        className="bg-decoration"
-                        src={decoration}
-                        alt="vision"
+    return (
+        <div className="app">
+            <AppHeader />
+            <main>
+                <RandomChar />
+                <div className="char__content">
+                    <CharList
+                        onCharSelected={onCharSelected}
+                        charId={selectedChar}
                     />
-                </main>
-            </div>
-        );
-    }
-}
+                    <CharInfo charId={selectedChar} />
+                </div>
+                <img className="bg-decoration" src={decoration} alt="vision" />
+            </main>
+        </div>
+    );
+};
