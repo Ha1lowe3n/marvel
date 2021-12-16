@@ -41,12 +41,12 @@ export const RandomChar: React.FC = React.memo(function RandomChar() {
         });
     };
 
-    const correctDescription = (description: string) => {
-        if (description.trim().length === 0) {
+    const correctDescription = (description: string | null) => {
+        if (!description || description.trim().length === 0) {
             return "there is no description :(";
         }
-        if (description.trim().length >= 212) {
-            return description.substring(0, 212) + "...";
+        if (description && description.trim().length >= 212) {
+            return description?.substring(0, 212) + "...";
         }
         return description;
     };

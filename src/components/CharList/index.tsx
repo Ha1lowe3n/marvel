@@ -1,68 +1,45 @@
 import "./charList.scss";
-import { useState, useEffect, memo } from "react";
-import { useMarvelService } from "../../services/MarvelService";
+import { useEffect, memo } from "react";
 import { Spinner } from "../../Spinner";
 import { ErrorGif } from "../ErrorGif";
-import { CharType } from "../RandomChar";
+import { useList } from "../../hooks/list.hook";
 
 interface CharListProps {
     onCharSelected: (id: number) => void;
     charId: number | null;
 }
 
-const limitOffsetCharacters = 1559;
-
 export const CharList: React.FC<CharListProps> = memo(function CharList({
     onCharSelected,
     charId,
 }) {
-    const [characters, setCharacters] = useState<CharType[]>([]);
-    const [newItemsLoading, setNewItemsLoading] = useState<boolean>(false);
-    const [offsetCharacters, setOffsetCharacters] = useState<number>(0);
-
-    const { loading, error, getCharactersByOffset, clearError } =
-        useMarvelService();
-
-    const loadingCharacters = async () => {
-        setNewItemsLoading(true);
-        const characters = await getCharactersByOffset(offsetCharacters);
-        setCharacters(characters);
-        setNewItemsLoading(false);
-    };
+    const {
+        items,
+        loadingItems,
+        onRequestNewItems,
+        showSpinner,
+        showError,
+        offset,
+        newItemsLoading,
+        limitOffset,
+    } = useList("characters");
 
     useEffect(() => {
-        loadingCharacters();
+        loadingItems();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const onRequestNewCharacters = async () => {
-        if (error) clearError();
-        setNewItemsLoading(true);
-        const changeOffset =
-            offsetCharacters <= 1550
-                ? 9
-                : limitOffsetCharacters - offsetCharacters;
-
-        const newCharacters = await getCharactersByOffset(
-            offsetCharacters + changeOffset
-        );
-        setCharacters((state) => [...state, ...newCharacters]);
-        setOffsetCharacters((state) => state + changeOffset);
-        setNewItemsLoading(false);
-    };
-
-    const errorOrLoad =
-        !characters.length && loading ? (
-            <Spinner />
-        ) : error ? (
-            <ErrorGif />
-        ) : null;
+    const errorOrLoad = showSpinner ? (
+        <Spinner />
+    ) : showError ? (
+        <ErrorGif />
+    ) : null;
 
     return (
         <div className="char__list">
             {errorOrLoad ?? (
                 <ul className="char__grid">
-                    {characters.map((char, i) => (
+                    {items.map((char: any, i) => (
                         <li
                             key={char.id}
                             className={
@@ -91,11 +68,11 @@ export const CharList: React.FC<CharListProps> = memo(function CharList({
                     ))}
                 </ul>
             )}
-            {offsetCharacters !== limitOffsetCharacters && (
+            {offset !== limitOffset && (
                 <button
                     className="button button__main button__long"
                     disabled={newItemsLoading}
-                    onClick={() => onRequestNewCharacters()}
+                    onClick={() => onRequestNewItems()}
                 >
                     <div className="inner">
                         {newItemsLoading ? "Waiting..." : "Load more"}
