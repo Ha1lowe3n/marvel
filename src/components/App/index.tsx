@@ -19,7 +19,7 @@ export const App: React.FC = () => {
         <div className="app">
             <AppHeader />
             <main>
-                <RandomChar />
+                {/* <RandomChar />
                 <div className="char__content">
                     <CharList
                         onCharSelected={onCharSelected}
@@ -27,10 +27,10 @@ export const App: React.FC = () => {
                     />
                     <CharInfo charId={selectedChar} />
                 </div>
-                <img className="bg-decoration" src={decoration} alt="vision" />
+                <img className="bg-decoration" src={decoration} alt="vision" /> */}
 
-                {/* <AppBanner />
-                <ComicsList /> */}
+                <AppBanner />
+                <ComicsList />
 
                 {/* <SingleComic /> */}
             </main>

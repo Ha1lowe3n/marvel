@@ -11,13 +11,12 @@ export const comics = ({
         const results = await getResultsFromRequest(
             `${_baseUrl}/comics?limit=8&offset=${offset}&${_apiKey}`
         );
-        console.log();
 
         return results.map((res: any) => ({
             id: res.id,
             title: res.title,
             thumbnail: `${res.thumbnail.path}.${res.thumbnail.extension}`,
-            price: res.prices.price,
+            price: res.prices[0].price,
         }));
     };
 

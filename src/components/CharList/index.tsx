@@ -3,6 +3,7 @@ import { useEffect, memo } from "react";
 import { Spinner } from "../../Spinner";
 import { ErrorGif } from "../ErrorGif";
 import { useList } from "../../hooks/list.hook";
+import { CharType } from "../RandomChar";
 
 interface CharListProps {
     onCharSelected: (id: number) => void;
@@ -39,7 +40,7 @@ export const CharList: React.FC<CharListProps> = memo(function CharList({
         <div className="char__list">
             {errorOrLoad ?? (
                 <ul className="char__grid">
-                    {items.map((char: any, i) => (
+                    {(items as CharType[]).map((char, i) => (
                         <li
                             key={char.id}
                             className={
