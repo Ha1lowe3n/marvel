@@ -1,7 +1,9 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ErrorGif } from "../components/ErrorGif";
 
 export const Page404 = () => {
+    const navigate = useNavigate();
+
     return (
         <div
             style={{
@@ -22,16 +24,17 @@ export const Page404 = () => {
             >
                 Page not found
             </span>
-            <Link to="/">
-                <span
-                    style={{
-                        display: "block",
-                        marginTop: "15px",
-                        fontSize: "18px",
-                        fontWeight: "bold",
-                    }}
-                >{`<- go to home page`}</span>
-            </Link>
+
+            <span
+                style={{
+                    display: "block",
+                    marginTop: "15px",
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                }}
+                onClick={() => navigate(-1)}
+            >{`<- go back`}</span>
         </div>
     );
 };

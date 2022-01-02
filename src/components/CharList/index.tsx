@@ -1,6 +1,6 @@
 import "./charList.scss";
 import { useEffect, memo } from "react";
-import { Spinner } from "../../Spinner";
+import { Spinner } from "../Spinner";
 import { ErrorGif } from "../ErrorGif";
 import { useList } from "../../hooks/list.hook";
 import { CharType } from "../RandomChar";

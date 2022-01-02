@@ -4,7 +4,7 @@ import { CharList } from "../components/CharList";
 import { RandomChar } from "../components/RandomChar";
 import decoration from "../resources/img/vision.png";
 
-export const MainPage = () => {
+export const MainPage: React.FC = () => {
     const [selectedChar, setSelectedChar] = useState<number | null>(null);
 
     const onCharSelected = useCallback((id: number) => {

@@ -1,7 +1,8 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Page404 } from "../../pages/404";
-import { ComicsPage } from "../../pages/comics";
+import { ComicsPage } from "../../pages/comics/";
 import { MainPage } from "../../pages/main";
+import { SingleComicPage } from "../../pages/singleComic";
 
 import { AppHeader } from "../AppHeader";
 
@@ -14,6 +15,10 @@ export const App: React.FC = () => {
                     <Routes>
                         <Route path="/" element={<MainPage />} />
                         <Route path="/comics" element={<ComicsPage />} />
+                        <Route
+                            path="/comics/:id"
+                            element={<SingleComicPage />}
+                        />
                         <Route path="*" element={<Page404 />} />
                     </Routes>
                 </main>

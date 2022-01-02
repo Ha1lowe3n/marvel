@@ -1,4 +1,4 @@
-import { ComicsType } from "../components/ComicsList";
+import { ComicsType } from "../pages/comics/";
 import { IParams } from "./MarvelService";
 
 export const comics = ({
@@ -6,7 +6,6 @@ export const comics = ({
     _baseUrl,
     _apiKey,
 }: IParams) => {
-    // return : thubnail, prices
     const getComicsByOffset = async (offset: number): Promise<ComicsType[]> => {
         const results = await getResultsFromRequest(
             `${_baseUrl}/comics?limit=8&offset=${offset}&${_apiKey}`
@@ -20,7 +19,30 @@ export const comics = ({
         }));
     };
 
+    const getComicById = async (comicId: number) => {
+        const results = await getResultsFromRequest(
+            `${_baseUrl}/comics/${comicId}?${_apiKey}`
+        );
+
+        const { id, title, description, pageCount, thumbnail, prices } =
+            results[0];
+
+        return {
+            id,
+            title,
+            description:
+                description.length > 0
+                    ? description
+                    : "there is no description",
+            pageCount,
+            thumbnail: `${thumbnail.path}.${thumbnail.extension}`,
+            price: prices[0].price,
+            languages: "en-us",
+        };
+    };
+
     return {
         getComicsByOffset,
+        getComicById,
     };
 };

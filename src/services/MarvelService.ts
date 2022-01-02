@@ -38,7 +38,7 @@ export const useMarvelService = () => {
         getCharacterById,
     } = characters(params);
 
-    const { getComicsByOffset } = comics(params);
+    const { getComicsByOffset, getComicById } = comics(params);
 
     return {
         loading,
@@ -48,6 +48,7 @@ export const useMarvelService = () => {
         getCharacterById,
         getRandomCharacterId,
         getCharactersByOffset,
-        getComicsByOffset
+        getComicsByOffset,
+        getComicById,
     };
 };

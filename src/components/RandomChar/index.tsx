@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import "./randomChar.scss";
 import mjolnir from "../../resources/img/mjolnir.png";
 import { useMarvelService } from "../../services/MarvelService";
-import { Spinner } from "../../Spinner";
+import { Spinner } from "../Spinner";
 import { ErrorGif } from "../ErrorGif";
 
 export type CharType = {

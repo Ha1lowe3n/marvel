@@ -2,7 +2,7 @@ import "./charInfo.scss";
 import { useEffect, useState } from "react";
 import { useMarvelService } from "../../services/MarvelService";
 import { CharType } from "../RandomChar";
-import { Spinner } from "../../Spinner";
+import { Spinner } from "../Spinner";
 import { ErrorGif } from "../ErrorGif";
 import { Skeleton } from "../Skeleton";
 
